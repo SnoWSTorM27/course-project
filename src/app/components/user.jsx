@@ -1,22 +1,18 @@
-import React from 'react';
-import BookMark from './bookmark';
-import Qualities from './qualities';
+import React from "react";
+import BookMark from "./bookmark";
+import Qualities from "./qualities";
+import PropTypes from "prop-types";
 
-export default function User(props) {
-  const {user} = props
-
+export default function User({ user, onToggleBookMark, onDelete }) {
   return (
     <>
       <tr>
         <td>{user.name}</td>
         <td>
-          {user.qualities.map(quality=>(
+          {user.qualities.map((quality) => (
             <Qualities
               key={quality._id}
               {...quality}
-              // color={quality.color}
-              // name={quality.name}
-              // _id={quality._id}
             />
           ))}
         </td>
@@ -24,19 +20,14 @@ export default function User(props) {
         <td>{user.completedMeetings}</td>
         <td>{user.rate}/5</td>
         <td>
-          <button
-            onClick={()=>props.onToggleBookMark(user._id)}
-          >
-            <BookMark 
-              status={user.bookmark}
-            />
+          <button onClick={() => onToggleBookMark(user._id)}>
+            <BookMark status={user.bookmark} />
           </button>
-          
         </td>
         <td>
           <button
-            className='btn btn-danger'
-            onClick={()=>props.onDelete(user._id)}
+            className="btn btn-danger"
+            onClick={() => onDelete(user._id)}
           >
             Delete
           </button>
@@ -45,3 +36,8 @@ export default function User(props) {
     </>
   );
 }
+User.propTypes = {
+  user: PropTypes.object,
+  onToggleBookMark: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired
+};
