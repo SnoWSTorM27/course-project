@@ -10,10 +10,7 @@ export default function User({ user, onToggleBookMark, onDelete }) {
         <td>{user.name}</td>
         <td>
           {user.qualities.map((quality) => (
-            <Qualities
-              key={quality._id}
-              {...quality}
-            />
+            <Qualities key={quality._id} {...quality} />
           ))}
         </td>
         <td>{user.profession.name}</td>
@@ -25,10 +22,7 @@ export default function User({ user, onToggleBookMark, onDelete }) {
           </button>
         </td>
         <td>
-          <button
-            className="btn btn-danger"
-            onClick={() => onDelete(user._id)}
-          >
+          <button className="btn btn-danger" onClick={() => onDelete(user._id)}>
             Delete
           </button>
         </td>

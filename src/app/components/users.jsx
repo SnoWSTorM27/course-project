@@ -29,7 +29,7 @@ export default function Users({ users, ...rest }) {
   };
 
   const filteredUsers = selectedProf
-    ? users.filter((user) => user.profession === selectedProf)
+    ? users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
     : users;
   const count = filteredUsers.length;
   const userCrop = paginate(filteredUsers, currentPage, pageSize);
@@ -39,14 +39,16 @@ export default function Users({ users, ...rest }) {
 
   return (
     <div className="d-flex">
-      { professions && (
+      {professions && (
         <div className="d-flex flex-column flex-shrink p-3">
           <GroupList
             selectedItem={selectedProf}
             items={professions}
             onItemSelect={handleProfessionSelect}
           />
-          <button className="btn btn-secondary mt-2" onClick={clearFilter}>Очистить</button>
+          <button className="btn btn-secondary mt-2" onClick={clearFilter}>
+            Очистить
+          </button>
         </div>
       )}
       <div className="d-flex flex-column">
@@ -66,11 +68,7 @@ export default function Users({ users, ...rest }) {
             </thead>
             <tbody>
               {userCrop?.map((user) => (
-                <User
-                  key={user._id}
-                  user={user}
-                  {...rest}
-                />
+                <User key={user._id} user={user} {...rest} />
               ))}
             </tbody>
           </table>
@@ -88,5 +86,5 @@ export default function Users({ users, ...rest }) {
   );
 }
 Users.propTypes = {
-  users: PropTypes.array
+  users: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
 };
