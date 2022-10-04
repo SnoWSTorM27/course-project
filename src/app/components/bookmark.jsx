@@ -35,7 +35,7 @@ export default function BookMark({ status, ...rest }) {
     return status ? favoritesIcon : standartIcon;
   };
 
-  return <>{renderBookMark()}</>;
+  return <button {...rest}>{renderBookMark()}</button>;
 }
 BookMark.propTypes = {
   status: PropTypes.bool
