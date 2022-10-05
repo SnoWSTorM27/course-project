@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Caret from "./caret";
 
 function TableHeader({ onSort, selectedSort, columns }) {
   const handleSort = (item) => {
@@ -28,6 +29,7 @@ function TableHeader({ onSort, selectedSort, columns }) {
             scope="col"
           >
             {columns[column].name}
+            {(selectedSort.path === columns[column].path) && columns[column].path && <Caret order={selectedSort.order}/>}
           </th>
         ))}
         {/* <th onClick={() => handleSort("name")} scope="col">Имя</th>
