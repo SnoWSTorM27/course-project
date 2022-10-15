@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-import UsersTable from "./usersTable";
-import api from "../api";
+import { paginate } from "../../utils/paginate";
+import Pagination from "../pagination";
+import UsersTable from "../usersTable";
+import api from "../../api";
 import PropTypes from "prop-types";
-import GroupList from "./groupList";
-import SearchStatus from "./searchStatus";
+import GroupList from "../groupList";
+import SearchStatus from "../searchStatus";
 import _ from "lodash";
-import Loader from "./loader";
+import Loader from "../loader";
 
 export default function Users() {
   const pageSize = 8;
