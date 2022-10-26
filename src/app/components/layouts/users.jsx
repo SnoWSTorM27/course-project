@@ -8,6 +8,7 @@ import GroupList from "../groupList";
 import SearchStatus from "../searchStatus";
 import _ from "lodash";
 import Loader from "../loader";
+import Search from "../search";
 
 export default function Users() {
   const pageSize = 8;
@@ -16,6 +17,8 @@ export default function Users() {
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
   const [users, setUsers] = useState();
+  const [searchUsers, setSearchUsers] = useState("");
+
   useEffect(() => {
     api.users.fetchAll().then((data) => setUsers(data));
   }, []);
@@ -39,7 +42,12 @@ export default function Users() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedProf]);
+    if (selectedProf) {
+      setSearchUsers("");
+    } else if (searchUsers) {
+      setSelectedProf();
+    }
+  }, [selectedProf, searchUsers]);
 
   const handleProfessionSelect = (item) => {
     setSelectedProf(item);
@@ -53,17 +61,23 @@ export default function Users() {
     setSortBy(item);
   };
   if (users) {
-    const filteredUsers = selectedProf
-      ? users.filter(
-        (user) =>
-          JSON.stringify(user.profession) === JSON.stringify(selectedProf)
-      )
-      : users;
+    let filteredUsers = users;
+    if (selectedProf) {
+      filteredUsers = users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf));
+    } else if (searchUsers) {
+      filteredUsers = users.filter((user) => JSON.stringify(user.name).toLowerCase().includes(searchUsers.toLowerCase()));
+    }
     const count = filteredUsers.length;
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
     const clearFilter = () => {
       setSelectedProf();
+    };
+
+    const handleSearchChange = (e) => {
+      setSelectedProf();
+      const { value } = e.target;
+      setSearchUsers(value);
     };
 
     return (
@@ -82,6 +96,12 @@ export default function Users() {
         )}
         <div className="d-flex flex-column">
           <SearchStatus length={count} />
+          <Search
+            label="Поиск"
+            name="search"
+            value={searchUsers}
+            onChange={handleSearchChange}
+          />
           {count > 0 && (
             <UsersTable
               users={userCrop}

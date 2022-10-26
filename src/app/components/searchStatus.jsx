@@ -8,8 +8,8 @@ export default function SearchStatus({ length }) {
       phrase = `${length} человека тусанут `;
     }
     return ((length === 0)
-      ? <span className="badge bg-danger m-2">Никто с тобой не тусанёт</span>
-      : <span className="badge bg-primary m-2">{phrase}с тобой сегодня</span>
+      ? <span className="badge bg-danger mb-3">Никто с тобой не тусанёт</span>
+      : <span className="badge bg-primary mb-3">{phrase}с тобой сегодня</span>
     );
   };
 
