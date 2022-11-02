@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function Search({ label, name, value, onChange }) {
+function SearchField({ label, name, value, onChange }) {
   return (
     <div className="input-group mb-3">
       <span className="input-group-text" id="inputGroup-sizing-default">{label}</span>
@@ -17,11 +17,11 @@ function Search({ label, name, value, onChange }) {
     </div>
   );
 }
-Search.propTypes = {
+SearchField.propTypes = {
   label: PropTypes.string,
   name: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func
 };
 
-export default Search;
+export default SearchField;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import api from "../api";
-import Loader from "./loader";
-import QualitiesList from "./qualitiesList";
+import api from "../../../api";
+import Loader from "../../common/loader";
+import Qualities from "../../ui/qualities";
 
 function UserPage() {
   const { userId } = useParams();
@@ -21,7 +21,7 @@ function UserPage() {
       <>
         <h1>{user.name}</h1>
         <h2>Профессия: {user.profession.name}</h2>
-        <QualitiesList qualities={user.qualities} />
+        <Qualities qualities={user.qualities} />
         <p>completedMeetings: {user.completedMeetings}</p>
         <h3>Rate: {user.rate}</h3>
         <button onClick={() => goToUsersList(user)} >Все Пользователи</button>

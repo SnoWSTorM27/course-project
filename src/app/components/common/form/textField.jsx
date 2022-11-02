@@ -12,6 +12,10 @@ function TextField({ label, type, name, value, onChange, error }) {
     setShowPassword((prevState) => !prevState);
   };
 
+  const handleChange = ({ target }) => {
+    onChange({ name: target.name, value: target.value });
+  };
+
   return (
     <div className="mb-4">
       <label htmlFor={name}>{label}</label>
@@ -21,7 +25,7 @@ function TextField({ label, type, name, value, onChange, error }) {
           id={name}
           name={name}
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
           className={getInputClasses()}
         />
         {type === "password" && (<button

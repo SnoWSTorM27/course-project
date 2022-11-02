@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export default function Qualities({ color, name, _id }) {
+export default function Quality({ color, name, _id }) {
   const getBadgeClasses = (color) => {
     let classes = "badge m-2 bg-";
     classes += color;
@@ -14,7 +14,7 @@ export default function Qualities({ color, name, _id }) {
     </span>
   );
 }
-Qualities.propTypes = {
+Quality.propTypes = {
   color: PropTypes.string,
   name: PropTypes.string,
   _id: PropTypes.string
