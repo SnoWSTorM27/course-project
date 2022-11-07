@@ -12,19 +12,20 @@ function UserPage() {
   }, []);
 
   const history = useHistory();
-  const goToUsersList = (hasUser) => {
-    hasUser ? history.push("/users") : history.replace("/users");
+  const goToUserEdit = (hasUser) => {
+    hasUser ? history.push(`/users/${userId}/edit`) : history.replace("/users");
   };
 
   if (user) {
     return (
       <>
         <h1>{user.name}</h1>
+        <h2>Email: {user.email}</h2>
         <h2>Профессия: {user.profession.name}</h2>
         <Qualities qualities={user.qualities} />
         <p>completedMeetings: {user.completedMeetings}</p>
         <h3>Rate: {user.rate}</h3>
-        <button onClick={() => goToUsersList(user)} >Все Пользователи</button>
+        <button onClick={() => goToUserEdit(user)} >Редактировать</button>
       </>
     );
   }

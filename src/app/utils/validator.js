@@ -16,6 +16,11 @@ export function validator(data, config) {
       statusValidate = !emailRegExp.test(data);
       break;
     }
+    case "isOneSpace": {
+      const nameRegExp = /^(([a-zA-Zа-яА-Я]*)\s){1}(([a-zA-Zа-яА-Я]*)\S)$/g;
+      statusValidate = !nameRegExp.test(data);
+      break;
+    }
     case "isCapitalSymbol": {
       const capitalRegExp = /[A-Z]+/g;
       statusValidate = !capitalRegExp.test(data);

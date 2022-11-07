@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import LoginForm from "../ui/loginForm";
 import RegisterForm from "../ui/registerForm";
 
@@ -18,12 +18,12 @@ function Login() {
             ? <>
               <h3 className="mb-4">Регистрация</h3>
               <RegisterForm />
-              <p>У вас уже есть аккаунт? <a className="link" role="button" onClick={toggleFormType} >Войти</a></p>
+              <p>У вас уже есть аккаунт? <Link to={`/login/login`} onClick={toggleFormType} >Войти</Link></p>
             </>
             : <>
               <h3 className="mb-4">Войти</h3>
               <LoginForm />
-              <p>У вас нет аккаунта? <a className="link" role="button" onClick={toggleFormType} >Зарегистрироваться</a></p>
+              <p>У вас нет аккаунта? <Link to={`/login/register`} onClick={toggleFormType} >Зарегистрироваться</Link></p>
             </>}
         </div>
       </div>

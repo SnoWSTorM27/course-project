@@ -36,7 +36,7 @@ function SelectField({ label, value, onChange, defaultOption, options, error, na
         {
           optionsArray.length > 0 && optionsArray.map((option) => (
             <option
-              key={option.value + "_" + option.label}
+              key={option.value}
               value={option.value}
             >
               {option.label}
