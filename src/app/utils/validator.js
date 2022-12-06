@@ -17,7 +17,8 @@ export function validator(data, config) {
       break;
     }
     case "isOneSpace": {
-      const nameRegExp = /^(([a-zA-Zа-яА-Я]*)\s){1}(([a-zA-Zа-яА-Я]*)\S)$/g;
+      // const nameRegExp = /^(([a-zA-Zа-яА-Я]*)\s){1}(([a-zA-Zа-яА-Я]*)\S)$/g; С пробелом Ф.И
+      const nameRegExp = /^([a-zA-Zа-яА-Я]*)/g;
       statusValidate = !nameRegExp.test(data);
       break;
     }

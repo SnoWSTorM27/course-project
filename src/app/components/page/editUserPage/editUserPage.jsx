@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import TextField from "../common/form/textField";
-import { validator } from "../../utils/validator";
-import api from "../../api";
-import SelectField from "../common/form/selectField";
-import RadioField from "../common/form/radioField";
-import MultySelectField from "../common/form/multiSelectField";
-import Loader from "../common/loader";
+import TextField from "../../common/form/textField";
+import { validator } from "../../../utils/validator";
+import api from "../../../api";
+import SelectField from "../../common/form/selectField";
+import RadioField from "../../common/form/radioField";
+import MultySelectField from "../../common/form/multiSelectField";
+import Loader from "../../common/loader";
 
-function EditUserForm() {
+function EditUserPage() {
   const { userId } = useParams();
   const [data, setData] = useState({ name: "", email: "", profession: "", sex: "male", qualities: [] });
   const [professions, setProfessions] = useState([]);
   const [errors, setErrors] = useState({});
   const [qualities, setQualities] = useState([]);
+  const [loading, setLoading] = useState(false);
   const transformData = (data) => {
     return data.map((el) => ({ label: el.name, value: el._id }));
   };
   useEffect(() => {
+    setLoading(true);
     api.users.getById(userId).then(({ profession, qualities, ...data }) =>
       setData((prevState) => ({
         ...prevState,
@@ -53,9 +55,6 @@ function EditUserForm() {
     name: {
       isRequired: {
         message: "Имя Фамилия обязательны для заполнения"
-      },
-      isOneSpace: {
-        message: "Между Именем и Фамилией должен быть один пробел"
       }
     },
     email: {
@@ -73,6 +72,9 @@ function EditUserForm() {
     }
   };
 
+  useEffect(() => {
+    if (data._id) setLoading(false);
+  }, [data]);
   useEffect(() => {
     validate();
   }, [data]);
@@ -130,12 +132,18 @@ function EditUserForm() {
     });
     goToUserPage();
   };
-
-  if (professions) {
-    return (
-      <div className="container mt-5">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 shadow p-4">
+  return (
+    <div className="container mt-5">
+      <button
+        className="btn btn-primary"
+        onClick={() => history.goBack()}
+      >
+        <i className="bi bi-caret-left"></i>
+        Назад
+      </button>
+      <div className="row">
+        <div className="col-md-6 offset-md-3 shadow p-4">
+          {!loading && Object.keys(professions).length > 0 ? (
             <form onSubmit={handleSubmit} >
               <TextField
                 label="Имя Фамилия"
@@ -180,12 +188,13 @@ function EditUserForm() {
                 className="btn btn-primary w-100 mx-auto"
               >Обновить</button>
             </form>
-          </div>
+          ) : (
+            <Loader />
+          )};
         </div>
       </div>
-    );
-  }
-  return <Loader />;
+    </div>
+  );
 }
 
-export default EditUserForm;
+export default EditUserPage;
