@@ -9,6 +9,7 @@ import SearchStatus from "../../ui/searchStatus";
 import _ from "lodash";
 import Loader from "../../common/loader";
 import SearchField from "../../common/form/searchField";
+import { useUsers } from "../../../hooks/useUsers";
 
 function UsersListPage() {
   const pageSize = 8;
@@ -16,14 +17,12 @@ function UsersListPage() {
   const [professions, setProfessions] = useState();
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
-  const [users, setUsers] = useState();
+  const { users } = useUsers();
   const [searchUsers, setSearchUsers] = useState("");
 
-  useEffect(() => {
-    api.users.fetchAll().then((data) => setUsers(data));
-  }, []);
   const handleDelete = (userId) => {
-    setUsers((users) => users.filter((user) => user._id !== userId));
+    // setUsers((users) => users.filter((user) => user._id !== userId));
+    console.log(userId);
   };
 
   const handleToggleBookMark = (id) => {
@@ -33,7 +32,8 @@ function UsersListPage() {
       }
       return user;
     });
-    setUsers(newListUsers);
+    // setUsers(newListUsers);
+    console.log(newListUsers);
   };
 
   useEffect(() => {
