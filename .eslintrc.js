@@ -19,6 +19,6 @@ module.exports = {
     ],
     "multiline-ternary": ["off"],
     camelcase: ["off"],
-    quotes: ["error", "double", { allowTemplateLiterals: true }]
+    quotes: ["error", "double", { allowTemplateLiterals: true, avoidEscape: true }]
   }
 };

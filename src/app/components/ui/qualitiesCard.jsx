@@ -9,9 +9,9 @@ function QualitiesCard({ data }) {
         <h5 className="card-title">
           <span>Качества</span>
         </h5>
-        <p className="card-text">
+        <div className="card-text">
           <Qualities qualities={data} />
-        </p>
+        </div>
       </div>
     </div>
   );

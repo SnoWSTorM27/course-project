@@ -1,25 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CommentsList, { AddCommentsForm } from "../common/comments";
-import { useParams } from "react-router-dom";
-import api from "../../api";
 import { orderBy } from "lodash";
+import { useComments } from "../../hooks/useComments";
 
 function commentsCard() {
-  const { userId } = useParams();
-  const [comments, setComments] = useState([]);
-  useEffect(() => {
-    api.comments.fetchCommentsForUser(userId).then((data) => setComments(data));
-  }, []);
+  const { createComment, comments, removeComment } = useComments();
   const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
 
   const handleRemoveComment = (id) => {
-    api.comments.remove(id).then((id) => {
-      setComments(comments.filter((person) => person._id !== id));
-    });
+    removeComment(id);
+    // api.comments.remove(id).then((id) => {
+    //   setComments(comments.filter((person) => person._id !== id));
+    // });
   };
 
   const handleAddComment = (data) => {
-    api.comments.add({ ...data, pageId: userId }).then((data) => setComments([...comments, data]));
+    createComment(data);
+    // api.comments.add({ ...data, pageId: userId }).then((data) => setComments([...comments, data]));
   };
   return (
     <>

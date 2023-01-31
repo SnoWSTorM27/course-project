@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 
 function RegisterForm() {
   const history = useHistory();
-  const [data, setData] = useState({ email: "", password: "", profession: "", sex: "male", qualities: [], licence: false });
+  const [data, setData] = useState({ email: "", password: "", profession: "", sex: "male", name: "", qualities: [], licence: false });
   const [errors, setErrors] = useState({});
   const { qualities } = useQualities();
   const { professions } = useProfession();
@@ -43,6 +43,15 @@ function RegisterForm() {
       },
       isEmail: {
         message: "Email введён некорректно"
+      }
+    },
+    name: {
+      isRequired: {
+        message: "Имя обязательно для заполнения"
+      },
+      minLength: {
+        message: "Имя должно состоять минимум из 3 символов",
+        value: 3
       }
     },
     password: {
@@ -92,6 +101,7 @@ function RegisterForm() {
       ...data,
       qualities: data.qualities.map(q => q.value)
     };
+    console.log(newData);
     try {
       await signUp(newData);
       history.push("/");
@@ -108,6 +118,13 @@ function RegisterForm() {
         value={data.email}
         onChange={handleChange}
         error={errors.email}
+      />
+      <TextField
+        label="Имя"
+        name="name"
+        value={data.name}
+        onChange={handleChange}
+        error={errors.name}
       />
       <TextField
         label="Пароль"

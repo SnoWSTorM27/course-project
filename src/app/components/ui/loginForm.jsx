@@ -75,9 +75,8 @@ function LoginForm() {
     const isValid = validate();
     if (!isValid) return;
     try {
-      console.log(data);
       await login({ email: data.email, password: data.password });
-      history.push("/");
+      history.push(history.location.state ? history.location.state.from.pathname : "/");
     } catch (error) {
       setErrors(error);
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import UserPage from "../page/userPage";
-import UsersLisrPage from "../page/usersListPage";
+import UsersListPage from "../page/usersListPage";
 import EditUserPage from "../page/editUserPage";
 import UserProvider from "../../hooks/useUsers";
 
@@ -19,7 +19,7 @@ function Users() {
             <UserPage userId={userId} />
           )
         ) : (
-          <UsersLisrPage />
+          <UsersListPage />
         )}
       </UserProvider>
     </>
