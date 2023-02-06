@@ -3,14 +3,17 @@ import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
 import CheckBoxField from "../common/form/checkBoxField";
 import { useHistory } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthErrors, login } from "../../store/users";
 // import * as yup from "yup";
 
 function LoginForm() {
   const history = useHistory();
-  const { login } = useAuth();
+  const dispatch = useDispatch();
   const [data, setData] = useState({ email: "", password: "", stayOn: false });
   const [errors, setErrors] = useState({});
+  const loginError = useSelector(getAuthErrors());
+
   const handleChange = (target) => {
     setData((prevState) => ({
       ...prevState,
@@ -70,16 +73,12 @@ function LoginForm() {
 
   const isValid = Object.keys(errors).length === 0;
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const isValid = validate();
     if (!isValid) return;
-    try {
-      await login({ email: data.email, password: data.password });
-      history.push(history.location.state ? history.location.state.from.pathname : "/");
-    } catch (error) {
-      setErrors(error);
-    }
+    const redirect = history.location.state ? history.location.state.from.pathname : "/";
+    dispatch(login({ payload: data, redirect }));
   };
 
   return (
@@ -106,6 +105,7 @@ function LoginForm() {
       >
         Оставаться в системе
       </CheckBoxField>
+      {loginError && <p className="text-danger">{loginError}</p>}
       <button
         type="submit"
         disabled={!isValid}

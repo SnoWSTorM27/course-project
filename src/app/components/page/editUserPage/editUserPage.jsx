@@ -1,38 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
 import TextField from "../../common/form/textField";
 import { validator } from "../../../utils/validator";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultySelectField from "../../common/form/multiSelectField";
 import Loader from "../../common/loader";
-import { useUsers } from "../../../hooks/useUsers";
-import { useQualities } from "../../../hooks/useQualities";
-import { useProfession } from "../../../hooks/useProfession";
-import { useAuth } from "../../../hooks/useAuth";
+import { useSelector, useDispatch } from "react-redux";
+import { getQualities, getQualitiesLoadingStatus } from "../../../store/qualities";
+import { getProfessions, getProfessionsLoadingStatus } from "../../../store/professions";
+import { getCurrentUserData, updateUserData } from "../../../store/users";
+import { useHistory } from "react-router-dom";
 
 function EditUserPage() {
-  const { userId } = useParams();
-  const { getUserById } = useUsers();
-  const user = getUserById(userId);
-  const [data, setData] = useState({ name: "", email: "", profession: "", sex: "male", qualities: [] });
+  const [data, setData] = useState();
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(true);
-  const { qualities, getQuality } = useQualities();
-  const { professions } = useProfession();
-  const { updateUserData } = useAuth();
-
-  function getAndTransformQualities(elements) {
-    const qualArr = Object.values(elements).map(qualityId => {
-      return getQuality(qualityId);
-    });
-    const transformArr = qualArr.map((optionName) => ({
-      label: optionName.name,
-      value: optionName._id,
-      color: optionName.color
-    }));
-    return transformArr;
-  };
+  const [isLoading, setLoading] = useState(true);
+  const qualities = useSelector(getQualities());
+  const qualitiesLoaidng = useSelector(getQualitiesLoadingStatus());
+  const professions = useSelector(getProfessions());
+  const professionsLoading = useSelector(getProfessionsLoadingStatus());
+  const currentUser = useSelector(getCurrentUserData());
+  const dispatch = useDispatch();
 
   const professionsList = professions.map((professionName) => ({
     label: professionName.name,
@@ -41,12 +29,37 @@ function EditUserPage() {
 
   const qualitiesList = qualities.map((optionName) => ({
     label: optionName.name,
-    value: optionName._id,
-    color: optionName.color
+    value: optionName._id
   }));
+
+  function getQualitiesById(qualitiesId) {
+    const qualitiesArr = [];
+    for (const qualityId of qualitiesId) {
+      for (const quality of qualities) {
+        if (quality._id === qualityId) {
+          qualitiesArr.push(quality);
+          break;
+        }
+      }
+    }
+    return qualitiesArr;
+  }
+  const transformData = (data) => {
+    const result = getQualitiesById(data).map((quality) => ({
+      label: quality.name,
+      value: quality._id
+    }));
+    return result;
+  };
+
   useEffect(() => {
-    setData((prevState) => ({ ...prevState, ...user, qualities: getAndTransformQualities(user.qualities) }));
-  }, []);
+    if (!qualitiesLoaidng && !professionsLoading && currentUser && !data) {
+      setData({
+        ...currentUser,
+        qualities: transformData(currentUser.qualities)
+      });
+    }
+  }, [qualitiesLoaidng, professionsLoading, currentUser, data]);
 
   const handleChange = (target) => {
     setData((prevState) => ({
@@ -77,7 +90,7 @@ function EditUserPage() {
   };
 
   useEffect(() => {
-    if (data._id) setLoading(false);
+    if (data && isLoading) setLoading(false);
   }, [data]);
 
   useEffect(() => {
@@ -93,10 +106,9 @@ function EditUserPage() {
   const isValid = Object.keys(errors).length === 0;
 
   const history = useHistory();
-  const goToUserPage = () => {
-    history.push(`/users/${userId}`);
-    history.go(0);// Экостыль" обновления данных
-  };
+  // const goToUserPage = () => {
+  //   history.push(`/users/${currentUser._id}`);
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,9 +118,8 @@ function EditUserPage() {
       ...data,
       qualities: data.qualities.map(q => q.value)
     };
-    console.log(newData);
-    await updateUserData(newData);
-    goToUserPage();
+    dispatch(updateUserData(newData));
+    // goToUserPage();
   };
   return (
     <div className="container mt-5">
@@ -121,7 +132,7 @@ function EditUserPage() {
       </button>
       <div className="row">
         <div className="col-md-6 offset-md-3 shadow p-4">
-          {!loading && Object.keys(professions).length > 0 ? (
+          {!isLoading && Object.keys(professions).length > 0 ? (
             <form onSubmit={handleSubmit} >
               <TextField
                 label="Имя Фамилия"

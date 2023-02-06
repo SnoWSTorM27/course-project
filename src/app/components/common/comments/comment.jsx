@@ -1,13 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { viewDate } from "../../../utils/viewDate";
-import { useUsers } from "../../../hooks/useUsers";
-import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { getCurrentUserId, getUserById } from "../../../store/users";
 
 function Comment({ content, created_at, _id, userId, onRemove }) {
-  const { getUserById } = useUsers();
-  const user = getUserById(userId);
-  const { currentUser } = useAuth();
+  const user = useSelector(getUserById(userId));
+  const currentUserId = useSelector(getCurrentUserId());
 
   return (
     <div className="bg-light card-body  mb-3">
@@ -30,7 +29,7 @@ function Comment({ content, created_at, _id, userId, onRemove }) {
                       - {viewDate(created_at)}
                     </span>
                   </p>
-                  {currentUser._id === userId && (
+                  {currentUserId === userId && (
                     <button
                       className="btn btn-sm text-primary d-flex align-items-center"
                       onClick={() => onRemove(_id)}

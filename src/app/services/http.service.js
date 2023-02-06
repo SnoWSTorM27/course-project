@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import configFile from "../config.json";
-import { httpAuth } from "../hooks/useAuth";
+import authService from "./auth.service";
 import localStorageService from "./localStorage.service";
 
 const http = axios.create({
@@ -10,17 +10,14 @@ const http = axios.create({
 
 http.interceptors.request.use(
   async function (config) {
-    const url = `https://securetoken.googleapis.com/v1/token?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+    // const url = `https://securetoken.googleapis.com/v1/token?key=${process.env.REACT_APP_FIREBASE_KEY}`;
     if (configFile.isFireBase) {
       const containSlash = /\/$/gi.test(config.url);
       config.url = (containSlash ? config.url.slice(0, -1) : config.url) + ".json";
       const expiresDate = localStorageService.getExpiresDate();
       const refreshToken = localStorageService.getRefreshToken();
       if (refreshToken && expiresDate < Date.now()) {
-        const { data } = await httpAuth.post(url, {
-          grant_type: "refresh_token",
-          refresh_token: refreshToken
-        });
+        const data = await authService.refresh();
         localStorageService.setTokens({
           idToken: data.id_token,
           refreshToken: data.refresh_token,
